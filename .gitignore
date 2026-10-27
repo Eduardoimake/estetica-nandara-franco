@@ -1,0 +1,17 @@
+# Dependências instaladas pelo npm
+node_modules/
+
+# Pasta gerada pelo comando npm run build
+dist/
+
+# Arquivos locais e variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Arquivos de sistema e editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

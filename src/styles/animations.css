@@ -1,0 +1,118 @@
+/* =========================================================
+   ARQUIVO: animations.css
+   Objetivo: concentrar todas as animações reutilizáveis do site.
+   Benefício: mantém movimento, feedback visual e identidade
+   premium sem espalhar keyframes pelos demais arquivos.
+   ========================================================= */
+
+/* Anima o traçado do logo durante o preloader. */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Cria o brilho pulsante dos botões de destaque. */
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* Move suavemente as esferas decorativas do Hero. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(40px, -30px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-30px, 40px) scale(0.95);
+  }
+}
+
+/* Faz o cursor da digitação piscar no Hero. */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Anima a seta de rolagem localizada no Hero. */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+
+  50% {
+    transform: translate(-50%, 10px);
+  }
+}
+
+/* Desloca o conteúdo do marquee continuamente. */
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Revela as linhas da tabela comparativa de pacotes. */
+@keyframes rowIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Cria o efeito de pulso no botão flutuante do WhatsApp. */
+@keyframes wpp {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55);
+  }
+
+  70% {
+    box-shadow: 0 0 0 20px rgba(37, 211, 102, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE: redução de movimento
+   Objetivo: respeitar a preferência do sistema por menos animações.
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .tl-item,
+  .chip {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #particles,
+  .orb {
+    display: none;
+  }
+}

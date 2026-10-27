@@ -1,0 +1,1164 @@
+/* =========================================================
+   ARQUIVO: components.css
+   Objetivo: estilizar botões, cartões, Club Slim, pacotes,
+   modal, galeria, FAQ, contato e rodapé.
+   Benefício: mantém os componentes reutilizáveis separados
+   do layout geral e das animações.
+   ========================================================= */
+
+/* =========================================================
+   BOTÕES
+   Objetivo: padronizar ações principais e chamadas para WhatsApp.
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--t-med);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal-escuro));
+  color: #fff;
+  box-shadow: 0 8px 24px -8px rgba(0, 124, 120, 0.5);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -8px rgba(0, 124, 120, 0.6);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--teal-escuro);
+  border: 1.5px solid var(--teal);
+}
+
+.btn-outline:hover {
+  background: var(--teal);
+  color: #fff;
+}
+
+.pulse {
+  position: relative;
+}
+
+.pulse::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: inherit;
+  opacity: 0.5;
+  z-index: -1;
+  animation: pulseGlow 2s infinite;
+}
+
+/* =========================================================
+   MENU MOBILE
+   Objetivo: estilizar o botão de abertura do menu.
+   ========================================================= */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 124, 120, 0.1);
+  z-index: 1001;
+}
+
+.burger span {
+  width: 22px;
+  height: 2px;
+  background: var(--teal-escuro);
+  border-radius: 2px;
+  transition: var(--t-fast);
+  transform-origin: center;
+}
+
+.burger.open span {
+  background: #fff;
+}
+
+.burger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.burger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================================
+   CARTÕES E TRATAMENTOS
+   Objetivo: apresentar serviços com hierarquia e destaque.
+   ========================================================= */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    400px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(98, 230, 200, 0.22),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(0, 124, 120, 0.08);
+  transition: transform var(--t-med), box-shadow var(--t-med);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px -15px rgba(0, 91, 90, 0.35);
+}
+
+.card .ico {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-logo));
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px -6px rgba(0, 124, 120, 0.5);
+}
+
+.card .ico svg {
+  width: 28px;
+  height: 28px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  color: var(--teal-escuro);
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 0.96rem;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.card .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--teal-escuro);
+  margin-bottom: 14px;
+}
+
+.card.destaque {
+  background: linear-gradient(135deg, var(--teal), var(--teal-escuro));
+  color: #fff;
+  border: none;
+}
+
+.card.destaque h3 {
+  color: var(--menta);
+}
+
+.card.destaque .ico {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.card.destaque .btn-outline {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.card.destaque .btn-outline:hover {
+  background: #fff;
+  color: var(--teal-escuro);
+}
+
+.nota {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* =========================================================
+   CLUB SLIM
+   Objetivo: destacar o programa mensal, procedimentos,
+   preço e planejamento semanal.
+   ========================================================= */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+}
+
+#club {
+  background: linear-gradient(160deg, var(--teal-escuro) 0%, #003f3e 100%);
+  color: #fff;
+  overflow: hidden;
+}
+
+#club::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: var(--menta);
+  filter: blur(140px);
+  opacity: 0.15;
+  top: -120px;
+  right: -120px;
+  pointer-events: none;
+}
+
+#club .sec-title {
+  color: var(--menta);
+}
+
+.club-desc {
+  max-width: 720px;
+  margin: 0 auto 50px;
+  font-size: 1.1rem;
+  opacity: 0.92;
+  text-align: center;
+}
+
+.step {
+  text-align: center;
+  position: relative;
+  padding: 10px;
+}
+
+.step .num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  background: var(--menta);
+  color: var(--teal-escuro);
+  box-shadow: var(--shadow-glow);
+  position: relative;
+  z-index: 1;
+}
+
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 38px;
+  left: calc(50% + 36px);
+  width: calc(100% - 72px);
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(98, 230, 200, 0.6) 0 8px,
+    transparent 8px 16px
+  );
+}
+
+.step h4 {
+  font-size: 1.02rem;
+  margin-bottom: 4px;
+}
+
+.step p {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.club-grid h3 {
+  color: var(--menta);
+  font-size: 1.3rem;
+  margin-bottom: 18px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  background: rgba(98, 230, 200, 0.12);
+  border: 1px solid rgba(98, 230, 200, 0.3);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: var(--d, 0s);
+}
+
+.chips.visible .chip {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.chip:hover {
+  background: var(--menta);
+  color: var(--teal-escuro);
+}
+
+.price-box {
+  text-align: center;
+}
+
+.selo {
+  display: inline-block;
+  background: var(--rosa);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.toggle {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 5px;
+  margin-bottom: 18px;
+}
+
+.toggle button,
+.chip-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: var(--t-fast);
+  min-height: 44px;
+}
+
+.toggle button.on,
+.chip-btn.on {
+  background: var(--menta);
+  color: var(--teal-escuro);
+}
+
+.price {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 9vw, 4.8rem);
+  color: var(--menta);
+  line-height: 1;
+}
+
+.price small {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  opacity: 0.8;
+}
+
+.price-note {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin: 10px 0 20px;
+}
+
+.planner {
+  margin-top: 30px;
+}
+
+.planner h3 {
+  margin-bottom: 6px;
+}
+
+.planner .sub {
+  font-size: 0.88rem;
+  opacity: 0.75;
+  margin-bottom: 16px;
+}
+
+.pl-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.pl-out {
+  font-size: 0.88rem;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  margin: 6px 0 16px;
+  min-height: 3.2em;
+}
+
+.btn-menta {
+  background: var(--menta);
+  color: var(--teal-escuro);
+  box-shadow: 0 8px 24px -8px rgba(98, 230, 200, 0.6);
+}
+
+.btn-menta:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   PACOTES DE DEPILAÇÃO
+   Objetivo: diferenciar visualmente Bronze, Prata, Ouro
+   e Diamante, facilitando a escolha.
+   ========================================================= */
+.pkg {
+  border-radius: var(--radius-lg);
+  padding: 32px 26px;
+  color: #2a2018;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--t-med);
+  position: relative;
+  overflow: hidden;
+}
+
+.pkg:hover {
+  transform: translateY(-8px) rotate(-0.6deg);
+}
+
+.pkg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.8s;
+}
+
+.pkg:hover::after {
+  left: 140%;
+}
+
+.pkg.bronze {
+  background: linear-gradient(145deg, #f3d2b0, #cd8b5a 55%, #a8693a);
+}
+
+.pkg.prata {
+  background: linear-gradient(145deg, #fafbfc, #c4cbd2 55%, #98a2ac);
+}
+
+.pkg.ouro {
+  background: linear-gradient(145deg, #fff3c4, #f0c14b 55%, #c99a1c);
+}
+
+.pkg.diamante {
+  background: linear-gradient(145deg, #eafcff, #9fe5f5 55%, #5fb7d6);
+}
+
+.pkg h3 {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.pkg .medal {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.pkg ul {
+  list-style: none;
+  margin: 16px 0 20px;
+}
+
+.pkg li {
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.pkg .de {
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.pkg .val {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 2.3rem;
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+
+.pkg .btn {
+  background: rgba(0, 0, 0, 0.82);
+  color: #fff;
+  width: 100%;
+  justify-content: center;
+}
+
+.pkg .btn:hover {
+  background: #000;
+}
+
+.pk-actions {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* =========================================================
+   MODAL E TABELA COMPARATIVA
+   Objetivo: permitir comparação clara entre os pacotes.
+   ========================================================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 40, 40, 0.7);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--t-med);
+}
+
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-box {
+  background: var(--branco-suave);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  transform: translateY(30px) scale(0.96);
+  transition: var(--t-med);
+  position: relative;
+}
+
+.modal.open .modal-box {
+  transform: none;
+}
+
+.modal-box h3 {
+  color: var(--teal-escuro);
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+}
+
+.x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 124, 120, 0.1);
+  font-size: 1.3rem;
+  color: var(--teal-escuro);
+}
+
+.tbl-wrap {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  min-width: 520px;
+}
+
+.tbl th,
+.tbl td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 124, 120, 0.15);
+}
+
+.tbl th {
+  color: var(--teal-escuro);
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.tbl td:first-child,
+.tbl th:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.tbl tr {
+  opacity: 0;
+  transform: translateX(-14px);
+  animation: rowIn 0.5s forwards;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+
+.sel-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sel-row select,
+.form select,
+.form input {
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(0, 124, 120, 0.3);
+  font: inherit;
+  background: #fff;
+  color: var(--grafite);
+  min-height: 44px;
+  width: 100%;
+}
+
+.sel-row select {
+  width: auto;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* =========================================================
+   RESULTADOS E GALERIA
+   Objetivo: apresentar antes/depois, carrossel, mosaico
+   e ampliação de imagens.
+   ========================================================= */
+.ba {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  --pos: 50%;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.ba-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ba-layer img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ba-before {
+  background: linear-gradient(135deg, #6b8f8d, #4a6d6b);
+}
+
+.ba-after {
+  background: linear-gradient(135deg, var(--teal-logo), var(--teal-escuro));
+  clip-path: inset(0 0 0 var(--pos));
+}
+
+.ba-tag {
+  position: absolute;
+  top: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  font-size: 0.72rem;
+  z-index: 2;
+}
+
+.ba-before .ba-tag {
+  left: 14px;
+}
+
+.ba-after .ba-tag {
+  right: 14px;
+}
+
+.ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 3px;
+  background: #fff;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.ba-handle::after {
+  content: "↔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--teal);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ba input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 4;
+  margin: 0;
+}
+
+.aviso {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(233, 103, 145, 0.1);
+  border-left: 4px solid var(--rosa);
+  font-size: 0.92rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 6px 2px 18px;
+  cursor: grab;
+  scrollbar-width: thin;
+  scrollbar-color: var(--teal) transparent;
+}
+
+.carousel.drag {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.slide {
+  flex: 0 0 min(240px, 70%);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius);
+  scroll-snap-align: start;
+  background: linear-gradient(135deg, var(--teal), var(--teal-escuro));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.85rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide img,
+.mos img,
+.sobre-foto img,
+.hero-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mos {
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--teal), var(--teal-escuro));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.85rem;
+  overflow: hidden;
+  position: relative;
+  cursor: zoom-in;
+  transition: transform var(--t-med);
+}
+
+.mos:hover {
+  transform: scale(1.03);
+}
+
+.mos:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.mos:nth-child(4) {
+  grid-column: span 2;
+}
+
+.mos > span,
+.slide > span {
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 30, 30, 0.88);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 2100;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--t-med);
+}
+
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lb-box {
+  width: min(900px, 100%);
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--teal), var(--teal-escuro));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.lb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================================================
+   FAQ
+   Objetivo: organizar dúvidas frequentes com abertura suave.
+   ========================================================= */
+.faq-list {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: #fff;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  padding: 20px 24px;
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--teal-escuro);
+  min-height: 44px;
+}
+
+.faq-q i {
+  font-style: normal;
+  font-size: 1.5rem;
+  transition: transform var(--t-fast);
+  color: var(--teal);
+}
+
+.faq-item.open .faq-q i {
+  transform: rotate(45deg);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-a p {
+  padding: 0 24px 22px;
+  opacity: 0.85;
+}
+
+/* =========================================================
+   CONTATO E RODAPÉ
+   Objetivo: facilitar agendamento, localização e contato.
+   ========================================================= */
+.ct-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 22px;
+}
+
+.ct-card .ci {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(98, 230, 200, 0.2);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+}
+
+.ct-card h4 {
+  color: var(--menta);
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.ct-card p,
+.ct-card a {
+  font-size: 0.95rem;
+  opacity: 0.92;
+}
+
+.ct-card a.link {
+  color: var(--menta);
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 6px;
+  opacity: 1;
+}
+
+.map {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 260px;
+  margin-top: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.map iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  border: 0;
+  display: block;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--menta);
+}
+
+.form h3 {
+  color: var(--menta);
+  font-size: 1.4rem;
+}
+
+.form .priv {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+footer {
+  background: #00403f;
+  color: #dff;
+  padding: 50px 0 100px;
+}
+
+.ft .logo {
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.ft h4 {
+  color: var(--menta);
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.ft p,
+.ft a {
+  font-size: 0.92rem;
+  opacity: 0.85;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ft a:hover {
+  color: var(--menta);
+  opacity: 1;
+}
+
+.copy {
+  margin-top: 34px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.82rem;
+  opacity: 0.7;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* =========================================================
+   BOTÕES FLUTUANTES
+   Objetivo: manter WhatsApp e retorno ao topo sempre acessíveis.
+   ========================================================= */
+.wpp-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 950;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25d366;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 30px -6px rgba(37, 211, 102, 0.7);
+  animation: wpp 2.4s infinite;
+}
+
+.wpp-float svg {
+  width: 32px;
+  height: 32px;
+  fill: #fff;
+}
+
+.wpp-float .tip {
+  position: absolute;
+  right: 72px;
+  background: #fff;
+  color: var(--teal-escuro);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: var(--t-fast);
+  pointer-events: none;
+}
+
+.wpp-float:hover .tip {
+  opacity: 1;
+  transform: none;
+}
+
+.to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 90px;
+  z-index: 940;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--teal-escuro);
+  color: #fff;
+  font-size: 1.1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--t-fast);
+  box-shadow: var(--shadow-soft);
+}
+
+.to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
