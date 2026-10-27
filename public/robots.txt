@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://DOMINIO-REAL/sitemap.xml
+Sitemap: https://estetica-nandara-franco.vercel.app/sitemap.xml
