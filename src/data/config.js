@@ -90,12 +90,18 @@ export const PRECOS = {
    o HTML ou os scripts.
    ========================================================= */
 export const FOTOS = {
-  hero: "",
-  sobre: "",
-  antes: "",
-  depois: "",
+  hero: "/images/hero.jpg",
+  sobre: "/images/sobre.jpg",
+  antes: "/images/antes.png",
+  depois: "/images/depois.png",
   espaco: [],
-  resultados: [],
+  resultados: [
+    "/images/resultado-1.png",
+    "/images/resultado-2.png",
+    "/images/resultado-3.png",
+    "/images/resultado-4.png",
+    "/images/resultado-5.png"
+  ],
 };
 
 /**

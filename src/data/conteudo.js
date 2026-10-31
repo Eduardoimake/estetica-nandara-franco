@@ -1,4 +1,4 @@
-/**
+/*
  * Conteúdo dinâmico do site.
  * Benefício: centraliza ícones, tratamentos, procedimentos, FAQ,
  * dias, turnos, palavras do Hero, rótulos da galeria e marquee.
