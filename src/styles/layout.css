@@ -6,6 +6,7 @@
    dos componentes e animações.
    ========================================================= */
 
+
 /* =========================================================
    PRELOADER E PROGRESSO
    Objetivo: transmitir carregamento profissional ao abrir o site.
@@ -20,24 +21,17 @@
   transition: opacity 0.6s, visibility 0.6s;
 }
 
+
 #preloader.gone {
   opacity: 0;
   visibility: hidden;
 }
 
-#preloader svg {
-  width: 90px;
-  height: 90px;
+
+#preloader img {
+  filter: brightness(0) invert(1);
 }
 
-#preloader path {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 3;
-  stroke-dasharray: 200;
-  stroke-dashoffset: 200;
-  animation: draw 1s ease forwards;
-}
 
 #progress {
   position: fixed;
@@ -49,6 +43,7 @@
   z-index: 1000;
   transition: width 0.1s;
 }
+
 
 /* =========================================================
    CABEÇALHO E NAVEGAÇÃO
@@ -64,6 +59,7 @@ header {
   padding: 16px 0;
 }
 
+
 header.scrolled {
   background: rgba(247, 248, 246, 0.85);
   backdrop-filter: blur(16px);
@@ -71,12 +67,14 @@ header.scrolled {
   box-shadow: 0 2px 20px rgba(0, 91, 90, 0.08);
 }
 
+
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
+
 
 .logo {
   display: flex;
@@ -87,6 +85,7 @@ header.scrolled {
   color: var(--teal-escuro);
   font-size: 1.05rem;
 }
+
 
 .logo-mark {
   width: 44px;
@@ -99,16 +98,44 @@ header.scrolled {
   flex-shrink: 0;
 }
 
+
 .logo-mark svg {
   width: 30px;
   height: 30px;
 }
+
+
+header .logo {
+  flex-shrink: 0;
+}
+
+
+header .logo-mark {
+  background: transparent;
+  box-shadow: none;
+}
+
+
+header .logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+header:not(.scrolled) .logo-mark img,
+body.menu-open header .logo-mark img {
+  filter: brightness(0) invert(1);
+}
+
 
 .menu {
   display: flex;
   gap: 4px;
   align-items: center;
 }
+
 
 .menu a {
   padding: 10px 16px;
@@ -117,13 +144,17 @@ header.scrolled {
   color: var(--grafite);
   border-radius: 999px;
   transition: var(--t-fast);
+  white-space: nowrap;
+  text-align: center;
 }
+
 
 .menu a:hover,
 .menu a.active {
   color: var(--teal);
   background: rgba(0, 124, 120, 0.08);
 }
+
 
 /* =========================================================
    HERO
@@ -147,12 +178,14 @@ header.scrolled {
   padding: 110px 0 60px;
 }
 
+
 .hero-bg {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
+
 
 .orb {
   position: absolute;
@@ -162,6 +195,7 @@ header.scrolled {
   animation: float 20s ease-in-out infinite;
 }
 
+
 .orb-1 {
   width: 400px;
   height: 400px;
@@ -169,6 +203,7 @@ header.scrolled {
   top: -100px;
   left: -100px;
 }
+
 
 .orb-2 {
   width: 500px;
@@ -179,6 +214,7 @@ header.scrolled {
   animation-delay: -5s;
 }
 
+
 .orb-3 {
   width: 300px;
   height: 300px;
@@ -188,11 +224,13 @@ header.scrolled {
   animation-delay: -10s;
 }
 
+
 #particles {
   position: absolute;
   inset: 0;
   z-index: 1;
 }
+
 
 .hero-content {
   position: relative;
@@ -203,14 +241,17 @@ header.scrolled {
   align-items: center;
 }
 
+
 .hero-text h1 {
   font-size: clamp(2.2rem, 5.5vw, 3.6rem);
   margin-bottom: 20px;
 }
 
+
 .hero-text h1 .accent {
   color: var(--menta);
 }
+
 
 .hero-sub {
   font-size: clamp(1rem, 2vw, 1.15rem);
@@ -219,6 +260,7 @@ header.scrolled {
   max-width: 520px;
 }
 
+
 .typewrap {
   min-height: 2em;
   margin-bottom: 32px;
@@ -226,10 +268,12 @@ header.scrolled {
   font-weight: 500;
 }
 
+
 .typewrap::before {
   content: "✨ ";
   margin-right: 4px;
 }
+
 
 #typed {
   color: var(--menta);
@@ -238,16 +282,19 @@ header.scrolled {
   animation: blink 1s infinite;
 }
 
+
 .hero-ctas {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
 }
 
+
 .hero-visual {
   position: relative;
   perspective: 1200px;
 }
+
 
 .hero-photo {
   aspect-ratio: 4 / 5;
@@ -268,6 +315,7 @@ header.scrolled {
   box-shadow: var(--shadow-glow);
 }
 
+
 .hero-photo::before {
   content: "";
   position: absolute;
@@ -280,11 +328,13 @@ header.scrolled {
   pointer-events: none;
 }
 
+
 .photo-placeholder {
   text-align: center;
   opacity: 0.85;
   padding: 20px;
 }
+
 
 .photo-placeholder svg {
   width: 60px;
@@ -293,12 +343,14 @@ header.scrolled {
   opacity: 0.7;
 }
 
+
 .photo-placeholder span {
   font-size: 0.8rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   display: block;
 }
+
 
 .float-card {
   position: absolute;
@@ -314,6 +366,7 @@ header.scrolled {
   max-width: 220px;
 }
 
+
 .float-card .badge {
   display: inline-block;
   background: linear-gradient(135deg, var(--teal), var(--menta));
@@ -326,11 +379,13 @@ header.scrolled {
   margin-bottom: 8px;
 }
 
+
 .float-card .loc {
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--grafite);
 }
+
 
 .hero-scroll {
   position: absolute;
@@ -346,6 +401,7 @@ header.scrolled {
   color: #fff;
 }
 
+
 /* =========================================================
    MARQUEE
    Objetivo: reforçar benefícios e especialidades em movimento.
@@ -360,12 +416,14 @@ header.scrolled {
   border-bottom: 1px solid rgba(98, 230, 200, 0.2);
 }
 
+
 .marquee-track {
   display: inline-flex;
   animation: slide 30s linear infinite;
   gap: 40px;
   padding-left: 40px;
 }
+
 
 .marquee span {
   font-weight: 600;
@@ -376,11 +434,13 @@ header.scrolled {
   gap: 40px;
 }
 
+
 .marquee span::after {
   content: "◆";
   color: var(--menta);
   opacity: 0.5;
 }
+
 
 /* =========================================================
    SOBRE
@@ -392,6 +452,7 @@ header.scrolled {
   gap: 60px;
   align-items: start;
 }
+
 
 .sobre-foto {
   aspect-ratio: 4 / 5;
@@ -406,10 +467,12 @@ header.scrolled {
   place-items: center;
 }
 
+
 .timeline {
   position: relative;
   padding-left: 40px;
 }
+
 
 .timeline::before {
   content: "";
@@ -427,6 +490,7 @@ header.scrolled {
   );
 }
 
+
 .tl-item {
   position: relative;
   padding: 0 0 32px;
@@ -435,10 +499,12 @@ header.scrolled {
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
 .tl-item.visible {
   opacity: 1;
   transform: translateX(0);
 }
+
 
 .tl-item::before {
   content: "";
@@ -452,16 +518,19 @@ header.scrolled {
   box-shadow: 0 0 0 4px rgba(98, 230, 200, 0.25), var(--shadow-glow);
 }
 
+
 .tl-item h3 {
   color: var(--teal-escuro);
   margin-bottom: 8px;
   font-size: 1.2rem;
 }
 
+
 .tl-item p {
   font-size: 0.98rem;
   opacity: 0.85;
 }
+
 
 .quote-box {
   margin-top: 40px;
@@ -473,11 +542,13 @@ header.scrolled {
   position: relative;
 }
 
+
 .quote-box p {
   font-size: 1.1rem;
   font-style: italic;
   line-height: 1.6;
 }
+
 
 .quote-box cite {
   display: block;
@@ -488,6 +559,7 @@ header.scrolled {
   font-size: 0.9rem;
 }
 
+
 /* =========================================================
    REVELAÇÃO AO ROLAR
    Objetivo: dar entrada suave às seções e elementos.
@@ -495,6 +567,7 @@ header.scrolled {
 section {
   scroll-margin-top: 70px;
 }
+
 
 .reveal {
   opacity: 0;
@@ -504,18 +577,22 @@ section {
   transition-delay: var(--d, 0s);
 }
 
+
 .reveal.visible {
   opacity: 1;
   transform: none;
 }
 
+
 .pulse {
   isolation: isolate;
 }
 
+
 body.menu-open {
   overflow: hidden;
 }
+
 
 body.menu-open .logo {
   color: #fff;
@@ -523,11 +600,13 @@ body.menu-open .logo {
   z-index: 1001;
 }
 
+
 header.scrolled {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   background: rgba(247, 248, 246, 0.97);
 }
+
 
 /* =========================================================
    GRADES PRINCIPAIS
@@ -540,12 +619,13 @@ header.scrolled {
   gap: 24px;
 }
 
+
 .steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-bottom: 50px;
 }
+
 
 .club-grid {
   display: grid;
@@ -554,11 +634,13 @@ header.scrolled {
   align-items: stretch;
 }
 
+
 .pk-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
 }
+
 
 .res-grid {
   display: grid;
@@ -567,12 +649,13 @@ header.scrolled {
   align-items: center;
 }
 
+
 .mosaic {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 170px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
+
 
 .ct-grid {
   display: grid;
@@ -580,10 +663,12 @@ header.scrolled {
   gap: 30px;
 }
 
+
 .ct-cards {
   display: grid;
   gap: 16px;
 }
+
 
 .ft {
   display: grid;

@@ -22,7 +22,7 @@ export const CONTATO = {
  * Benefício: permite atualizar o texto sem alterar o HTML.
  * @type {string}
  */
-export const HORARIOS = "Consulte os horários pelo WhatsApp";
+export const HORARIOS = "Segunda a sexta, das 09h às 19h. Sábado, das 09h às 14h";
 
 /**
  * Controla a exibição do selo promocional.
@@ -30,7 +30,7 @@ export const HORARIOS = "Consulte os horários pelo WhatsApp";
  * sem remover o componente do site.
  * @type {boolean}
  */
-export const MOSTRAR_SELO_OUTUBRO = true;
+export const MOSTRAR_SELO = true;
 
 /* =========================================================
    PREÇOS
@@ -94,7 +94,11 @@ export const FOTOS = {
   sobre: "/images/sobre.jpg",
   antes: "/images/antes.png",
   depois: "/images/depois.png",
-  espaco: [],
+  espaco: [
+    "/images/recepcao.png",
+    "/images/corredor.png",
+    "/images/sala-de-atendimento.png"
+  ],
   resultados: [
     "/images/resultado-1.png",
     "/images/resultado-2.png",

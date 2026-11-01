@@ -117,6 +117,9 @@ export const TIPOS = [
    Objetivo: responder dúvidas comuns e reduzir fricção
    no agendamento.
    ========================================================= */
+
+import { HORARIOS } from "./config.js";
+
 export const FAQ = [
   [
     "Como funciona a avaliação?",
@@ -140,7 +143,7 @@ export const FAQ = [
   ],
   [
     "Qual o horário de atendimento?",
-    "Consulte os horários pelo WhatsApp.",
+    HORARIOS,
   ],
 ];
 
@@ -177,12 +180,9 @@ export const PALAVRAS = [
    Objetivo: definir os rótulos provisórios do mosaico.
    ========================================================= */
 export const MOS_LABELS = [
-  "Foto do espaço",
-  "Sala de atendimento",
-  "Equipamentos",
-  "Ambiente",
   "Recepção",
-  "Detalhes",
+  "Corredor",
+  "Sala de atendimento"
 ];
 
 /* =========================================================

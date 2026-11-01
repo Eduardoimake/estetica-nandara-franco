@@ -4,14 +4,17 @@
  * seção ativa e revelação suave dos elementos.
  */
 
+
 import { $, $$, reduce } from "./contato.js";
 import { fecharModal } from "./depilacao.js";
 import { fecharLb } from "./galeria.js";
+
 
 /* =========================================================
    PRELOADER, PROGRESSO E BOTÃO DE TOPO
    Objetivo: melhorar a sensação de carregamento e navegação.
    ========================================================= */
+
 
 /**
  * Inicializa preloader, barra de progresso, cabeçalho fixo
@@ -27,9 +30,11 @@ export function initPreloaderProgresso() {
     }, reduce ? 0 : 900);
   });
 
+
   const cabecalho = $("header");
   const progresso = $("#progress");
   const botaoTopo = $("#toTop");
+
 
   /**
    * Atualiza a barra de progresso e o estado do cabeçalho.
@@ -41,24 +46,30 @@ export function initPreloaderProgresso() {
     const alturaRestante =
       document.documentElement.scrollHeight - innerHeight;
 
+
     progresso.style.width =
       (alturaRestante > 0 ? (posicao / alturaRestante) * 100 : 0) + "%";
+
 
     cabecalho.classList.toggle("scrolled", posicao > 40);
     botaoTopo.classList.toggle("show", posicao > 600);
   }
 
+
   addEventListener("scroll", aoRolar, { passive: true });
   aoRolar();
+
 
   botaoTopo.onclick = () =>
     scrollTo({ top: 0, behavior: "smooth" });
 }
 
+
 /* =========================================================
    MENU
    Objetivo: controlar abertura, fechamento e acessibilidade.
    ========================================================= */
+
 
 /**
  * Inicializa o menu mobile e o fechamento por tecla Escape.
@@ -68,6 +79,8 @@ export function initPreloaderProgresso() {
 export function initMenu() {
   const burger = $("#burger");
   const menu = $("#menu");
+  const desktop = window.matchMedia("(min-width: 1200px)");
+
 
   /**
    * Abre ou fecha o menu conforme o estado atual.
@@ -78,19 +91,31 @@ export function initMenu() {
    */
   function toggleMenu(forcarEstado) {
     const aberto =
-      forcarEstado ?? !menu.classList.contains("open");
+      !desktop.matches &&
+      (forcarEstado ?? !menu.classList.contains("open"));
+
 
     menu.classList.toggle("open", aberto);
     burger.classList.toggle("open", aberto);
     document.body.classList.toggle("menu-open", aberto);
-    burger.setAttribute("aria-expanded", aberto);
+    burger.setAttribute("aria-expanded", String(aberto));
+    burger.setAttribute(
+      "aria-label",
+      aberto ? "Fechar menu" : "Abrir menu"
+    );
   }
 
+
   burger.onclick = () => toggleMenu();
+
 
   $$("a", menu).forEach((link) => {
     link.addEventListener("click", () => toggleMenu(false));
   });
+
+
+  desktop.addEventListener("change", () => toggleMenu(false));
+
 
   addEventListener("keydown", (evento) => {
     if (evento.key === "Escape") {
@@ -101,10 +126,12 @@ export function initMenu() {
   });
 }
 
+
 /* =========================================================
    SCROLLSPY
    Objetivo: destacar no menu a seção visível.
    ========================================================= */
+
 
 /**
  * Inicializa o destaque automático do menu conforme a rolagem.
@@ -114,6 +141,7 @@ export function initMenu() {
 export function initScrollspy() {
   const menu = $("#menu");
 
+
   const secoes = [
     "inicio",
     "sobre",
@@ -121,8 +149,11 @@ export function initScrollspy() {
     "club",
     "depilacao",
     "resultados",
+    "espaco",
+    "faq",
     "contato",
   ].map((id) => $("#" + id));
+
 
   const spy = new IntersectionObserver(
     (entradas) => {
@@ -140,13 +171,16 @@ export function initScrollspy() {
     { rootMargin: "-45% 0px -50% 0px" }
   );
 
+
   secoes.forEach((secao) => secao && spy.observe(secao));
 }
+
 
 /* =========================================================
    REVELAÇÃO AO ROLAR
    Objetivo: dar entrada suave aos elementos marcados.
    ========================================================= */
+
 
 /**
  * Inicializa a animação de revelação dos elementos.
@@ -166,10 +200,12 @@ export function initReveal() {
     { threshold: 0.15 }
   );
 
+
   $$(".reveal,.tl-item,.chips").forEach((elemento, indice) => {
     if (elemento.classList.contains("tl-item")) {
       elemento.style.transitionDelay = (indice % 5) * 0.08 + "s";
     }
+
 
     revelador.observe(elemento);
   });

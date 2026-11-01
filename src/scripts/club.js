@@ -6,7 +6,7 @@
 
 import {
   PRECOS,
-  MOSTRAR_SELO_OUTUBRO,
+  MOSTRAR_SELO,
 } from "../data/config.js";
 import {
   DIAS,
@@ -33,7 +33,7 @@ import {
 export function initClub() {
   const selo = $("#selo");
 
-  selo.style.display = MOSTRAR_SELO_OUTUBRO ? "inline-block" : "none";
+  selo.style.display = MOSTRAR_SELO ? "inline-block" : "none";
 
   const priceVal = $("#priceVal");
   let precoAtual = 0;
