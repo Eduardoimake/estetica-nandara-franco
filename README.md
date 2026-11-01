@@ -2,106 +2,60 @@
 
 Site institucional de uma página para a Estética Nandara Franco, no centro de Xerém, Duque de Caxias - RJ.
 
-O projeto é construído com [Vite](https://vitejs.dev/) e preparado para deploy estático na [Vercel](https://vercel.com/).
+Construído com [Vite](https://vitejs.dev/) e preparado para deploy estático na [Vercel](https://vercel.com/).
 
 ## Requisitos
 
 - Node.js 20 ou superior
 - npm 10 ou superior
 
-## Instalação
+## Primeiros passos
 
 ```bash
 npm install
-```
-
-## Rodar em desenvolvimento
-
-```bash
+npm run imagens
+npm run verificar
 npm run dev
 ```
 
-O Vite abrirá o site automaticamente no navegador, normalmente em:
+O comando `npm run imagens` gera os arquivos `.webp`, o `og-image.jpg` (imagem de compartilhamento) e os ícones PNG. Depois dele, os PNGs originais de `public/images` podem ser apagados.
 
-```text
-http://localhost:5173
-```
+## Comandos
 
-## Verificar consistência
-
-```bash
-npm run verificar
-```
-
-## Gerar versão de produção
-
-```bash
-npm run build
-```
-
-O build gera os arquivos finais na pasta:
-
-```text
-dist/
-```
-
-## Testar versão de produção
-
-```bash
-npm run preview
-```
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Abre o site em desenvolvimento (http://localhost:5173) |
+| `npm run verificar` | Confere arquivos, imports, imagens e telefone |
+| `npm run imagens` | Otimiza imagens e gera ícones e og-image |
+| `npm run build` | Gera a versão final em `dist/` |
+| `npm run preview` | Testa a versão final localmente |
 
 ## Deploy na Vercel
 
-### Opção 1 — Pelo site da Vercel
-
 1. Envie o projeto para um repositório no GitHub.
-2. Acesse a [Vercel](https://vercel.com/) e clique em **Add New > Project**.
-3. Importe o repositório `estetica-nandara-franco-site`.
-4. A Vercel deve detectar automaticamente o projeto Vite.
-5. Confirme as configurações:
+2. Na Vercel: **Add New > Project** e importe o repositório.
+3. Confirme: Framework Vite, Build `npm run build`, Output `dist`.
+4. Clique em **Deploy**.
 
-| Configuração | Valor |
-|---|---|
-| Framework Preset | Vite |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
-| Install Command | `npm install` |
+## Onde editar
 
-6. Clique em **Deploy**.
+- `src/data/config.js`: contato, horários, preços, selo promocional (com data de validade), fotos e mensagens do WhatsApp.
+- `src/data/conteudo.js`: tratamentos, procedimentos, FAQ, dias, turnos e opções do formulário.
+- `public/images/logo.svg`: logo oficial.
+- `public/privacidade.html`: política de privacidade.
 
-### Opção 2 — Pela Vercel CLI
+## Antes de publicar
 
-```bash
-npm install -g vercel
-vercel
-```
+- Confirmar endereço oficial e CEP.
+- Confirmar horários.
+- Preencher `DEPILACAO_NOTA` e `CLUB_INFO` em `config.js`, se desejado.
+- Confirmar que as fotos de resultados são reais e autorizadas por escrito.
+- Se usar domínio próprio, trocar a URL em `index.html` (canonical, og:url, og:image, JSON-LD), `public/robots.txt` e `public/sitemap.xml`.
 
-Para publicar a versão de produção:
+## Analítica de cliques no WhatsApp
 
-```bash
-vercel --prod
-```
-
-## Configurações principais
-
-- `src/data/config.js`: contato, horários, preços, fotos, logo, selo promocional e mensagens do WhatsApp.
-- `src/data/conteudo.js`: tratamentos, procedimentos, FAQ, dias, turnos e textos dinâmicos.
-- `public/images/logo.svg`: substitua pelo logo oficial em SVG.
-- `src/data/config.js`, objeto `FOTOS`: adicione os caminhos das fotos de hero, sobre, antes, depois, espaço e resultados.
+Cada clique dispara o evento `whatsapp:clique` e, se existir, chama `plausible` ou `gtag` informando a seção de origem. Para ativar, descomente a linha do Plausible no `index.html` (ajustando o domínio).
 
 ## Guia de apresentação
 
-Abra o site com:
-
-```text
-http://localhost:5173/?guia=1
-```
-
-Em produção:
-
-```text
-[https://SEU-DOMINIO.vercel.app/?guia=1](https://SEU-DOMINIO.vercel.app/?guia=1)
-```
-
-O guia explica cada seção durante a reunião de apresentação.
+Abra o site com `?guia=1` no final do endereço, por exemplo `http://localhost:5173/?guia=1`. O guia explica cada seção durante a apresentação à cliente.

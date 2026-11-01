@@ -1,7 +1,7 @@
 /**
- * Verificação estática dos arquivos do projeto.
- * Benefício: detecta arquivos ausentes, imports locais inválidos e referências
- * suspeitas antes de apresentar o site à cliente.
+ * Verificação estática do projeto.
+ * Detecta arquivos ausentes, imports inválidos, seletores suspeitos,
+ * imagens referenciadas que não existem e dados de contato divergentes.
  */
 
 import { readFile, readdir, stat } from 'node:fs/promises';
@@ -11,23 +11,26 @@ import { fileURLToPath } from 'node:url';
 
 const raiz = fileURLToPath(new URL('../', import.meta.url));
 const erros = [];
+const avisos = [];
 
 const esperados = [
   'package.json',
   'vite.config.js',
   '.nvmrc',
   '.gitignore',
+  'vercel.json',
   'src/data/config.js',
   'src/data/conteudo.js',
   'src/main.js',
   'src/scripts/dom.js',
-  'src/scripts/whatsapp.js',
+  'src/scripts/foco.js',
   'index.html',
   'src/styles/base.css',
   'src/styles/layout.css',
   'src/styles/components.css',
   'src/styles/animations.css',
   'src/styles/responsive.css',
+  'src/styles/acessibilidade.css',
   'src/styles/guia.css',
   'src/scripts/render.js',
   'src/scripts/interactions.js',
@@ -41,29 +44,24 @@ const esperados = [
   'public/robots.txt',
   'public/sitemap.xml',
   'public/site.webmanifest',
+  'public/privacidade.html',
   'public/favicon.svg',
+  'public/favicon-32.png',
+  'public/apple-touch-icon.png',
+  'public/icon-192.png',
+  'public/icon-512.png',
+  'public/og-image.jpg',
   'public/images/logo.svg',
   'tools/atualizar-seo.mjs',
   'tools/verificar-projeto.mjs',
+  'tools/otimizar-imagens.mjs',
   'README.md'
 ];
 
-/**
- * Apresenta um caminho relativo usando barras normais.
- * Benefício: mantém os relatórios legíveis no Windows e em outros sistemas.
- * @param {string} arquivo Caminho absoluto.
- * @returns {string} Caminho relativo para apresentação.
- */
 function relativo(arquivo) {
   return path.relative(raiz, arquivo).split(path.sep).join('/');
 }
 
-/**
- * Lista os arquivos de uma pasta recursivamente.
- * Benefício: permite verificar todos os módulos sem uma lista manual de imports.
- * @param {string} pasta Caminho da pasta.
- * @returns {Promise<string[]>} Arquivos encontrados.
- */
 async function listarArquivos(pasta) {
   if (!existsSync(pasta)) {
     return [];
@@ -85,12 +83,6 @@ async function listarArquivos(pasta) {
   return arquivos;
 }
 
-/**
- * Extrai caminhos de imports estáticos e dinâmicos.
- * Benefício: inclui estilos e módulos carregados apenas quando necessários.
- * @param {string} codigo Código JavaScript.
- * @returns {string[]} Referências encontradas.
- */
 function extrairImports(codigo) {
   const referencias = [];
   const padroes = [
@@ -108,11 +100,6 @@ function extrairImports(codigo) {
   return Array.from(new Set(referencias));
 }
 
-/**
- * Verifica os arquivos obrigatórios e seus conteúdos.
- * Benefício: evita executar um projeto com arquivos faltando ou vazios.
- * @returns {Promise<void>} Conclusão da verificação.
- */
 async function verificarArquivos() {
   for (const nome of esperados) {
     const arquivo = path.join(raiz, nome);
@@ -129,24 +116,25 @@ async function verificarArquivos() {
       continue;
     }
 
-    const conteudo = await readFile(arquivo, 'utf8');
-
-    if (!conteudo.trim()) {
+    if (informacoes.size === 0) {
       erros.push(`Arquivo vazio: ${nome}`);
+      continue;
     }
 
-    if (nome.endsWith('.svg') && !/<svg\b/i.test(conteudo)) {
-      erros.push(`SVG sem elemento raiz: ${nome}`);
+    if (nome.endsWith('.svg')) {
+      const conteudo = await readFile(arquivo, 'utf8');
+
+      if (!/<svg\b/i.test(conteudo)) {
+        erros.push(`SVG sem elemento raiz: ${nome}`);
+      }
     }
+  }
+
+  if (existsSync(path.join(raiz, 'src/scripts/whatsapp.js'))) {
+    avisos.push('src/scripts/whatsapp.js não é mais usado. Pode apagar.');
   }
 }
 
-/**
- * Confere caminhos de imports sem confundir escapes com caminhos.
- * Benefício: identifica referências inválidas sem gerar os falsos alertas anteriores.
- * @param {string[]} arquivos Arquivos JavaScript do projeto.
- * @returns {Promise<Map<string, string>>} Código lido por arquivo.
- */
 async function verificarImports(arquivos) {
   const codigos = new Map();
 
@@ -176,12 +164,6 @@ async function verificarImports(arquivos) {
   return codigos;
 }
 
-/**
- * Confere seletores simples literais contra HTML e templates dos scripts.
- * Benefício: detecta erros de digitação em IDs e classes usados nas interações.
- * @param {Map<string, string>} codigos Código dos módulos.
- * @returns {Promise<void>} Conclusão da verificação.
- */
 async function verificarSeletores(codigos) {
   const arquivoHtml = path.join(raiz, 'index.html');
 
@@ -223,11 +205,53 @@ async function verificarSeletores(codigos) {
   }
 }
 
-/**
- * Executa as verificações e define o resultado do comando.
- * Benefício: permite detectar falhas antes de iniciar ou construir o site.
- * @returns {Promise<void>} Conclusão da execução.
- */
+async function verificarDados() {
+  const caminhoConfig = path.join(raiz, 'src/data/config.js');
+  const caminhoHtml = path.join(raiz, 'index.html');
+
+  if (!existsSync(caminhoConfig) || !existsSync(caminhoHtml)) {
+    return;
+  }
+
+  const config = await readFile(caminhoConfig, 'utf8');
+  const html = await readFile(caminhoHtml, 'utf8');
+
+  const tel = config.match(/\btel:\s*"(\d+)"/)?.[1];
+  const telFmt = config.match(/\btelFmt:\s*"([^"]+)"/)?.[1];
+
+  if (tel) {
+    if (!html.includes('+' + tel)) {
+      erros.push(`Telefone +${tel} do config.js não aparece no JSON-LD do index.html.`);
+    }
+
+    if (!html.includes('wa.me/' + tel)) {
+      erros.push(`Link wa.me/${tel} não aparece no index.html.`);
+    }
+  }
+
+  if (telFmt && !html.includes(telFmt)) {
+    erros.push(`Telefone formatado "${telFmt}" não aparece no index.html.`);
+  }
+
+  for (const resultado of config.matchAll(/"(\/images\/[^"]+)"/g)) {
+    const arquivo = path.join(raiz, 'public', resultado[1]);
+
+    if (!existsSync(arquivo)) {
+      erros.push(`Imagem do config.js não existe: public${resultado[1]} (rode "npm run imagens").`);
+    }
+  }
+
+  const ate = config.match(/\bate:\s*"(\d{4}-\d{2}-\d{2})"/)?.[1];
+
+  if (ate && new Date(ate + 'T23:59:59') < new Date()) {
+    avisos.push(`O selo promocional venceu em ${ate}. Atualize SELO em config.js.`);
+  }
+
+  if (/SEU-DOMINIO|TODO|FIXME/.test(html)) {
+    avisos.push('O index.html contém um marcador pendente (SEU-DOMINIO, TODO ou FIXME).');
+  }
+}
+
 async function executar() {
   await verificarArquivos();
 
@@ -243,10 +267,15 @@ async function executar() {
   const codigos = await verificarImports(arquivosJs);
 
   await verificarSeletores(codigos);
+  await verificarDados();
+
+  for (const aviso of new Set(avisos)) {
+    console.warn('⚠️  ' + aviso);
+  }
 
   if (erros.length) {
     for (const erro of new Set(erros)) {
-      console.error(erro);
+      console.error('❌ ' + erro);
     }
 
     process.exitCode = 1;
@@ -256,14 +285,7 @@ async function executar() {
   console.log('✅ Projeto consistente');
 }
 
-/**
- * Relata uma falha inesperada durante a verificação.
- * Benefício: apresenta o motivo da interrupção sem informar sucesso incorretamente.
- * @param {Error} erro Falha encontrada.
- */
-function relatarFalha(erro) {
+executar().catch((erro) => {
   console.error(`Falha ao verificar o projeto: ${erro.message}`);
   process.exitCode = 1;
-}
-
-executar().catch(relatarFalha);
+});

@@ -1,23 +1,11 @@
 /**
- * Efeitos visuais do Hero.
- * Benefício: cria uma primeira impressão premium com digitação,
- * partículas, tilt 3D e brilho interativo.
+ * Efeitos visuais do Hero: digitação, partículas, tilt 3D e brilho.
  */
 
 import { PALAVRAS } from "../data/conteudo.js";
 import { $, $$, reduce } from "./contato.js";
 
-/* =========================================================
-   DIGITAÇÃO
-   Objetivo: alternar palavras de destaque no Hero.
-   ========================================================= */
-
-/**
- * Inicializa o efeito de digitação.
- * Benefício: comunica rapidamente os principais diferenciais
- * da Estética Nandara Franco.
- * @returns {void}
- */
+/** Alterna palavras de destaque no Hero. */
 export function initDigitacao() {
   const palavras = PALAVRAS;
   let indicePalavra = 0;
@@ -26,11 +14,6 @@ export function initDigitacao() {
 
   const typed = $("#typed");
 
-  /**
-   * Escreve e apaga as palavras do Hero em sequência.
-   * Benefício: mantém a primeira dobra dinâmica sem recarregar a página.
-   * @returns {void}
-   */
   function type() {
     const palavra = palavras[indicePalavra];
 
@@ -60,33 +43,20 @@ export function initDigitacao() {
   type();
 }
 
-/* =========================================================
-   PARTÍCULAS
-   Objetivo: criar conexões visuais no fundo do Hero.
-   ========================================================= */
-
-/**
- * Inicializa as partículas animadas do Hero.
- * Benefício: reforça a identidade visual premium sem afetar
- * a navegação da visitante.
- * @returns {void}
- */
+/** Partículas do Hero (desativadas em telas pequenas para poupar bateria). */
 export function initParticulas() {
   const canvas = $("#particles");
 
   if (!canvas || reduce) return;
+  if (matchMedia("(max-width: 767px)").matches) return;
 
   const contexto = canvas.getContext("2d");
   let largura;
   let altura;
   let particulas = [];
   let executando = true;
+  let temporizador = 0;
 
-  /**
-   * Ajusta o canvas e recria as partículas conforme o tamanho da tela.
-   * Benefício: mantém o efeito responsivo em diferentes dispositivos.
-   * @returns {void}
-   */
   function size() {
     largura = canvas.width = canvas.offsetWidth;
     altura = canvas.height = canvas.offsetHeight;
@@ -103,11 +73,6 @@ export function initParticulas() {
     );
   }
 
-  /**
-   * Desenha as partículas e as conexões entre elas.
-   * Benefício: cria profundidade e movimento no Hero.
-   * @returns {void}
-   */
   function frame() {
     if (executando) {
       contexto.clearRect(0, 0, largura, altura);
@@ -122,13 +87,7 @@ export function initParticulas() {
         }
 
         contexto.beginPath();
-        contexto.arc(
-          particula.x,
-          particula.y,
-          particula.r,
-          0,
-          6.283
-        );
+        contexto.arc(particula.x, particula.y, particula.r, 0, 6.283);
         contexto.fillStyle = "rgba(98,230,200,.55)";
         contexto.fill();
       });
@@ -141,9 +100,7 @@ export function initParticulas() {
 
           if (distancia < 9000) {
             contexto.strokeStyle =
-              "rgba(98,230,200," +
-              0.15 * (1 - distancia / 9000) +
-              ")";
+              "rgba(98,230,200," + 0.15 * (1 - distancia / 9000) + ")";
             contexto.beginPath();
             contexto.moveTo(particulas[i].x, particulas[i].y);
             contexto.lineTo(particulas[j].x, particulas[j].y);
@@ -157,7 +114,11 @@ export function initParticulas() {
   }
 
   size();
-  addEventListener("resize", size);
+
+  addEventListener("resize", () => {
+    clearTimeout(temporizador);
+    temporizador = setTimeout(size, 200);
+  });
 
   new IntersectionObserver((entradas) => {
     executando = entradas[0].isIntersecting;
@@ -166,17 +127,7 @@ export function initParticulas() {
   frame();
 }
 
-/* =========================================================
-   TILT E BRILHO
-   Objetivo: reagir ao movimento do ponteiro no Hero,
-   cartões e botões principais.
-   ========================================================= */
-
-/**
- * Inicializa o efeito de inclinação e brilho interativo.
- * Benefício: dá sensação de modernidade e resposta ao toque/mouse.
- * @returns {void}
- */
+/** Inclinação 3D da foto e brilho que segue o ponteiro. */
 export function initTiltEBrilho() {
   const tilt = $("#tilt");
 
@@ -188,9 +139,9 @@ export function initTiltEBrilho() {
       const posX = (evento.clientX - retangulo.left) / retangulo.width;
       const posY = (evento.clientY - retangulo.top) / retangulo.height;
 
-      tilt.style.transform = `rotateY(${
-        (posX - 0.5) * 14
-      }deg) rotateX(${(0.5 - posY) * 14}deg)`;
+      tilt.style.transform = `rotateY(${(posX - 0.5) * 14}deg) rotateX(${
+        (0.5 - posY) * 14
+      }deg)`;
 
       tilt.style.setProperty("--mx", posX * 100 + "%");
       tilt.style.setProperty("--my", posY * 100 + "%");

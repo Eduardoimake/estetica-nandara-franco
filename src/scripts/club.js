@@ -1,50 +1,39 @@
 /**
- * Funcionalidades da seção Club Slim.
- * Benefício: apresenta o programa, anima o valor mensal e permite
- * que a visitante envie sua preferência de dia e turno pelo WhatsApp.
+ * Seção Club Slim: selo, preço animado, forma de pagamento
+ * e planejador semanal.
  */
 
-import {
-  PRECOS,
-  MOSTRAR_SELO,
-} from "../data/config.js";
-import {
-  DIAS,
-  TURNOS,
-} from "../data/conteudo.js";
-import {
-  $,
-  $$,
-  reduce,
-  abrirWhats,
-} from "./contato.js";
-
-/* =========================================================
-   CLUB SLIM
-   Objetivo: controlar selo promocional, preço animado,
-   forma de pagamento e planejamento semanal.
-   ========================================================= */
+import { PRECOS, MOSTRAR_SELO, SELO } from "../data/config.js";
+import { DIAS, TURNOS } from "../data/conteudo.js";
+import { $, $$, reduce, abrirWhats } from "./contato.js";
 
 /**
- * Inicializa todas as interações do Club Slim.
- * Benefício: torna a seção mais clara e facilita o agendamento.
- * @returns {void}
+ * Indica se o selo ainda está dentro da validade.
+ * @returns {boolean} Verdadeiro se deve aparecer.
  */
+function seloVigente() {
+  if (!MOSTRAR_SELO) return false;
+  if (!SELO.ate) return true;
+
+  const [ano, mes, dia] = SELO.ate.split("-").map(Number);
+  const limite = new Date(ano, mes - 1, dia, 23, 59, 59);
+
+  return new Date() <= limite;
+}
+
 export function initClub() {
   const selo = $("#selo");
 
-  selo.style.display = MOSTRAR_SELO ? "inline-block" : "none";
+  if (seloVigente()) {
+    selo.textContent = SELO.texto;
+    selo.hidden = false;
+  } else {
+    selo.hidden = true;
+  }
 
   const priceVal = $("#priceVal");
   let precoAtual = 0;
 
-  /**
-   * Anima a transição entre os valores do Club Slim.
-   * Benefício: dá sensação de atualização natural ao trocar
-   * entre Pix/dinheiro e cartão.
-   * @param {number} alvo Valor final a ser exibido.
-   * @returns {void}
-   */
   function animaPreco(alvo) {
     if (reduce) {
       priceVal.textContent = alvo;
@@ -60,10 +49,7 @@ export function initClub() {
       const progresso = Math.min(1, (tempo - tempoInicial) / duracao);
       const suavizacao = 1 - Math.pow(1 - progresso, 3);
 
-      precoAtual = Math.round(
-        inicial + (alvo - inicial) * suavizacao
-      );
-
+      precoAtual = Math.round(inicial + (alvo - inicial) * suavizacao);
       priceVal.textContent = precoAtual;
 
       if (progresso < 1) {
@@ -89,7 +75,7 @@ export function initClub() {
     botao.onclick = () => {
       $$(".toggle button").forEach((item) => {
         item.classList.toggle("on", item === botao);
-        item.setAttribute("aria-selected", item === botao);
+        item.setAttribute("aria-pressed", String(item === botao));
       });
 
       const cartao = botao.dataset.pay === "cartao";
@@ -104,40 +90,28 @@ export function initClub() {
   let diaSelecionado = "";
   let turnoSelecionado = "";
 
-  /**
-   * Cria botões de escolha para dias ou turnos.
-   * Benefício: ajuda a visitante a informar a preferência
-   * sem precisar escrever no WhatsApp.
-   * @param {HTMLElement} container Elemento que receberá os botões.
-   * @param {string[]} opcoes Opções disponíveis.
-   * @param {Function} aoEscolher Ação executada após a escolha.
-   * @returns {void}
-   */
   function chipBtns(container, opcoes, aoEscolher) {
     container.innerHTML = opcoes
       .map(
         (opcao) =>
-          `<button type="button" class="chip-btn">${opcao}</button>`
+          `<button type="button" class="chip-btn" aria-pressed="false">${opcao}</button>`
       )
       .join("");
 
     $$("button", container).forEach((botao, indice) => {
       botao.onclick = () => {
-        $$("button", container).forEach((item) =>
-          item.classList.remove("on")
-        );
+        $$("button", container).forEach((item) => {
+          item.classList.remove("on");
+          item.setAttribute("aria-pressed", "false");
+        });
 
         botao.classList.add("on");
+        botao.setAttribute("aria-pressed", "true");
         aoEscolher(opcoes[indice]);
       };
     });
   }
 
-  /**
-   * Atualiza a mensagem de preferência exibida no planejador.
-   * Benefício: mostra à visitante exatamente o que será enviado.
-   * @returns {void}
-   */
   function atualizaPl() {
     $("#plOut").textContent =
       diaSelecionado && turnoSelecionado
@@ -157,13 +131,13 @@ export function initClub() {
 
   $("#plBtn").onclick = () => {
     if (!diaSelecionado || !turnoSelecionado) {
-      $("#plOut").textContent =
-        "Escolha um dia e um turno para continuar.";
+      $("#plOut").textContent = "Escolha um dia e um turno para continuar.";
       return;
     }
 
     abrirWhats(
-      `Olá, Nandara! Quero agendar uma avaliação para o Club Slim. Prefiro ${diaSelecionado} pela ${turnoSelecionado.toLowerCase()}. Pode me confirmar a disponibilidade?`
+      `Olá, Nandara! Quero agendar uma avaliação para o Club Slim. Prefiro ${diaSelecionado} pela ${turnoSelecionado.toLowerCase()}. Pode me confirmar a disponibilidade?`,
+      "Club Slim (planejador)"
     );
   };
 }

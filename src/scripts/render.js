@@ -1,96 +1,127 @@
 /**
  * Renderização do conteúdo dinâmico e aplicação das fotos.
- * Benefício: mantém textos, tratamentos, pacotes, FAQ e galeria
- * centralizados nos arquivos de configuração e conteúdo.
  */
 
-import { PRECOS, FOTOS } from "../data/config.js";
+import {
+  PRECOS,
+  FOTOS,
+  DEPILACAO_NOTA,
+  CLUB_INFO,
+} from "../data/config.js";
 import {
   ICONS,
   TRAT,
   PROCS,
   FAQ,
+  OBJETIVOS,
   MOS_LABELS,
   MARQUEE_ITENS,
 } from "../data/conteudo.js";
-import { $, $$ } from "./contato.js";
-
-/* =========================================================
-   RENDERIZAÇÃO DE CONTEÚDO
-   Objetivo: montar tratamentos, Club Slim, pacotes, FAQ,
-   mosaico, carrossel e marquee.
-   ========================================================= */
+import { $, $$, urlWhats } from "./contato.js";
 
 /**
- * Renderiza todo o conteúdo dinâmico do site.
- * Benefício: permite atualizar serviços, preços e textos
- * sem editar manualmente o HTML.
- * @returns {void}
+ * Escapa texto para uso seguro em HTML e atributos.
+ * @param {unknown} texto Texto original.
+ * @returns {string} Texto escapado.
  */
+function esc(texto) {
+  return String(texto)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const moeda = (valor) =>
+  valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+/** Renderiza todo o conteúdo dinâmico do site. */
 export function renderizarConteudo() {
-  $("#gridTrat").innerHTML = TRAT.map(
-    (tratamento, indice) => `
+  $("#gridTrat").innerHTML = TRAT.map((tratamento, indice) => {
+    const mensagem = `Olá, Nandara! Gostaria de saber mais sobre: ${tratamento.n}.`;
+
+    return `
       <article class="card glow-card reveal ${
         tratamento.dest ? "destaque" : ""
       }" style="--d:${(indice % 4) * 0.08}s">
-        ${
-          tratamento.dest
-            ? '<span class="tag">Especialidade</span>'
-            : ""
-        }
+        ${tratamento.dest ? '<span class="tag">Especialidade</span>' : ""}
         <div class="ico">
-          <svg viewBox="0 0 24 24" aria-hidden="true">${
-            ICONS[tratamento.i]
-          }</svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[tratamento.i]}</svg>
         </div>
-        <h3>${tratamento.n}</h3>
-        <p>${tratamento.d}</p>
-        <button class="btn btn-outline" data-whats="x" data-msg="Olá, Nandara! Gostaria de saber mais sobre: ${
-          tratamento.n
-        }.">Quero saber mais</button>
-      </article>`
-  ).join("");
+        <h3>${esc(tratamento.n)}</h3>
+        <p>${esc(tratamento.d)}</p>
+        <a class="btn btn-outline" href="${esc(urlWhats(mensagem))}" data-whats="x" data-msg="${esc(
+      mensagem
+    )}" target="_blank" rel="noopener">Quero saber mais</a>
+      </article>`;
+  }).join("");
 
   $("#chips").innerHTML = PROCS.map(
     (procedimento, indice) =>
-      `<span class="chip" style="--d:${indice * 0.07}s">${procedimento}</span>`
+      `<span class="chip" style="--d:${indice * 0.07}s">${esc(procedimento)}</span>`
   ).join("");
 
-  $("#pkGrid").innerHTML = PRECOS.pacotes.map(
-    (pacote, indice) => `
-      <article class="pkg ${pacote.id} reveal" style="--d:${indice * 0.1}s">
-        <div class="medal">${pacote.medalha}</div>
-        <h3>Pacote ${pacote.nome}</h3>
+  const infoClub = $("#clubInfo");
+
+  if (CLUB_INFO.length) {
+    infoClub.innerHTML = CLUB_INFO.map((item) => `<li>${esc(item)}</li>`).join("");
+    infoClub.hidden = false;
+  }
+
+  const notaDepilacao = $("#depNota");
+
+  if (DEPILACAO_NOTA) {
+    notaDepilacao.textContent = DEPILACAO_NOTA;
+    notaDepilacao.hidden = false;
+  }
+
+  $("#pkGrid").innerHTML = PRECOS.pacotes
+    .map((pacote, indice) => {
+      const mensagem = `Olá, Nandara! Tenho interesse no Pacote ${pacote.nome} de depilação. Pode me passar mais informações?`;
+
+      return `
+      <article class="pkg ${esc(pacote.id)} reveal" style="--d:${indice * 0.1}s">
+        <div class="medal" aria-hidden="true">${pacote.medalha}</div>
+        <h3>Pacote ${esc(pacote.nome)}</h3>
         <ul>${pacote.itens
           .map(
             (item) =>
-              `<li>${item[1]} sessões de ${item[0].toLowerCase()}</li>`
+              `<li>${item[1]} sessões de ${esc(item[0].toLowerCase())}</li>`
           )
           .join("")}</ul>
         <div class="de">10x de</div>
         <div class="val">R$ ${pacote.parcela}</div>
-        <button class="btn" data-whats="x" data-msg="Olá, Nandara! Tenho interesse no Pacote ${
-          pacote.nome
-        } de depilação. Pode me passar mais informações?">Quero este pacote</button>
-      </article>`
-  ).join("");
+        <div class="total">Total: ${moeda(pacote.parcela * 10)}</div>
+        <a class="btn" href="${esc(urlWhats(mensagem))}" data-whats="x" data-msg="${esc(
+        mensagem
+      )}" target="_blank" rel="noopener">Quero este pacote</a>
+      </article>`;
+    })
+    .join("");
 
   $("#faqList").innerHTML = FAQ.map(
     (pergunta, indice) => `
       <div class="faq-item reveal">
-        <button class="faq-q" aria-expanded="false" aria-controls="fa${indice}">
-          ${pergunta[0]}<i>+</i>
+        <button type="button" class="faq-q" id="fq${indice}" aria-expanded="false" aria-controls="fa${indice}">
+          ${esc(pergunta[0])}<i aria-hidden="true">+</i>
         </button>
-        <div class="faq-a" id="fa${indice}">
-          <p>${pergunta[1]}</p>
+        <div class="faq-a" id="fa${indice}" role="region" aria-labelledby="fq${indice}" inert>
+          <p>${esc(pergunta[1])}</p>
         </div>
       </div>`
   ).join("");
 
+  $("#fObj").innerHTML = OBJETIVOS.map(
+    (objetivo) => `<option>${esc(objetivo)}</option>`
+  ).join("");
+
   $("#mosaic").innerHTML = MOS_LABELS.map(
     (rotulo, indice) =>
-      `<div class="mos" data-img="espaco" data-idx="${indice}" tabindex="0" role="button" aria-label="Ampliar: ${rotulo}">
-        <span>${rotulo}</span>
+      `<div class="mos" data-img="espaco" data-idx="${indice}" tabindex="0" role="button" aria-label="Ampliar: ${esc(
+        rotulo
+      )}">
+        <span>${esc(rotulo)}</span>
       </div>`
   ).join("");
 
@@ -104,50 +135,47 @@ export function renderizarConteudo() {
     .join("");
 
   $("#marquee").innerHTML = MARQUEE_ITENS.map(
-    (texto) => `<span>${texto}</span>`
-  ).join("").repeat(2);
+    (texto) => `<span>${esc(texto)}</span>`
+  )
+    .join("")
+    .repeat(2);
 }
 
-/* =========================================================
-   FOTOS
-   Objetivo: inserir imagens configuradas em FOTOS.
-   ========================================================= */
-
-/**
- * Aplica as fotos configuradas nos espaços reservados.
- * Benefício: permite que Eduardo adicione as imagens depois,
- * apenas editando o objeto FOTOS em config.js.
- * @returns {void}
- */
+/** Aplica as fotos configuradas nos espaços reservados. */
 export function aplicarFotos() {
   $$("[data-img]").forEach((elemento) => {
     const chave = elemento.dataset.img;
     const valor = FOTOS[chave];
-
-    const url = Array.isArray(valor)
-      ? valor[+elemento.dataset.idx || 0]
-      : valor;
+    const indice = +elemento.dataset.idx || 0;
+    const url = Array.isArray(valor) ? valor[indice] : valor;
 
     if (!url) return;
 
+    const textos = {
+      hero: "Nandara Franco, esteticista",
+      sobre: "Nandara Franco em atendimento",
+      antes: "Foto antes do tratamento",
+      depois: "Foto depois do tratamento",
+      espaco: `Espaço da clínica em Xerém: ${MOS_LABELS[indice] || ""}`.trim(),
+      resultados: `Resultado ${indice + 1} de cliente da Estética Nandara Franco`,
+    };
+
     const imagem = document.createElement("img");
     imagem.src = url;
-    imagem.loading = "lazy";
+    imagem.alt = textos[chave] || "";
+    imagem.decoding = "async";
 
-    imagem.alt =
-      {
-        hero: "Nandara Franco, esteticista",
-        sobre: "Nandara Franco em atendimento",
-        antes: "Foto antes do tratamento",
-        depois: "Foto depois do tratamento",
-        espaco: "Espaço da clínica em Xerém",
-        resultados: "Resultado de cliente",
-      }[chave] || "";
+    if (chave === "hero") {
+      imagem.loading = "eager";
+      imagem.fetchPriority = "high";
+    } else {
+      imagem.loading = "lazy";
+    }
 
     elemento.prepend(imagem);
 
-    $$(".photo-placeholder,span:not(.ba-tag)", elemento).forEach(
-      (item) => item.remove()
+    $$(".photo-placeholder,span:not(.ba-tag)", elemento).forEach((item) =>
+      item.remove()
     );
   });
 }

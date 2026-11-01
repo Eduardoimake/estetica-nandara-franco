@@ -1,13 +1,13 @@
-/**
+/*
  * Configuração editável do site.
- * Benefício: concentra contato, horários, preços, fotos, selo
- * promocional e mensagens de WhatsApp em um único arquivo.
- */
+ * Concentra contato, horários, preços, fotos, selo promocional
+ * e mensagens de WhatsApp em um único arquivo.
+*/
 
-/* =========================================================
-   CONTATO
-   Objetivo: manter telefone, endereço e Instagram atualizados.
-   ========================================================= */
+/* CONTATO
+   Confirme o nome oficial da rua e o CEP no site dos Correios antes de publicar.
+   Se alterar aqui, altere também o rodapé e o JSON-LD no index.html
+   (o comando "npm run verificar" avisa se o telefone divergir). */
 export const CONTATO = {
   nome: "Estética Nandara Franco",
   tel: "5521976470481",
@@ -17,26 +17,22 @@ export const CONTATO = {
   instagram: "https://www.instagram.com/esteticanandarafranco",
 };
 
-/**
- * Horário de atendimento exibido no site.
- * Benefício: permite atualizar o texto sem alterar o HTML.
- * @type {string}
- */
+/** Horário de atendimento exibido no site (confirmar com a Nandara). */
 export const HORARIOS = "Segunda a sexta, das 09h às 19h. Sábado, das 09h às 14h";
 
-/**
- * Controla a exibição do selo promocional.
- * Benefício: permite ativar ou desativar a condição especial
- * sem remover o componente do site.
- * @type {boolean}
- */
+/** Liga ou desliga o selo promocional. */
 export const MOSTRAR_SELO = true;
 
-/* =========================================================
-   PREÇOS
-   Objetivo: centralizar valores do Club Slim e dos pacotes
-   de depilação.
-   ========================================================= */
+/**
+ * Selo promocional.
+ * "ate" é a última data (AAAA-MM-DD) em que o selo aparece; depois some sozinho.
+ */
+export const SELO = {
+  texto: "CONDIÇÃO ESPECIAL DE NOVEMBRO",
+  ate: "2026-11-30",
+};
+
+/* PREÇOS */
 export const PRECOS = {
   clubPix: 420,
   clubCartao: 450,
@@ -45,7 +41,7 @@ export const PRECOS = {
       id: "bronze",
       nome: "Bronze",
       medalha: "🥉",
-      itens: [["Axila", 10]],
+      itens: [["Axilas", 10]],
       parcela: 65,
     },
     {
@@ -83,47 +79,63 @@ export const PRECOS = {
   ],
 };
 
-/* =========================================================
-   FOTOS
-   Objetivo: reservar os caminhos das imagens do site.
-   Benefício: permite adicionar as fotos depois sem alterar
-   o HTML ou os scripts.
-   ========================================================= */
+/**
+ * Texto opcional exibido abaixo do título dos pacotes de depilação.
+ * Exemplo: "Depilação à luz pulsada." (preencher após confirmar com a Nandara).
+ * Deixe vazio para não exibir.
+ */
+export const DEPILACAO_NOTA = "";
+
+/**
+ * Lista opcional de informações do Club Slim (exibida abaixo do preço).
+ * Exemplo: ["4 sessões por mês", "Sessões de 50 minutos"].
+ * Deixe vazio para não exibir.
+ */
+export const CLUB_INFO = [];
+
+/* FOTOS
+   Os arquivos .webp são gerados por "npm run imagens". */
 export const FOTOS = {
   hero: "/images/hero.jpg",
   sobre: "/images/sobre.jpg",
-  antes: "/images/antes.png",
-  depois: "/images/depois.png",
+  antes: "/images/antes.webp",
+  depois: "/images/depois.webp",
   espaco: [
-    "/images/recepcao.png",
-    "/images/corredor.png",
-    "/images/sala-de-atendimento.png"
+    "/images/recepcao.webp",
+    "/images/corredor.webp",
+    "/images/sala-de-atendimento.webp",
   ],
   resultados: [
-    "/images/resultado-1.png",
-    "/images/resultado-2.png",
-    "/images/resultado-3.png",
-    "/images/resultado-4.png",
-    "/images/resultado-5.png"
+    "/images/resultado-1.webp",
+    "/images/resultado-2.webp",
+    "/images/resultado-3.webp",
+    "/images/resultado-4.webp",
+    "/images/resultado-5.webp",
   ],
 };
 
-/**
- * Mensagem padrão enviada pelo WhatsApp.
- * Benefício: garante uma abordagem profissional quando o botão
- * não tiver uma mensagem específica.
- * @type {string}
- */
+/** Mensagem padrão enviada pelo WhatsApp. */
 export const MSG_PADRAO =
   "Olá, Nandara! Vim pelo site e gostaria de agendar uma avaliação.";
 
-/**
- * Mensagens específicas por seção do site.
- * Benefício: ajuda a Nandara a identificar a origem do contato.
- * @type {Object<string, string>}
- */
+/** Mensagens específicas por botão. */
 export const MSGS = {
   padrao: MSG_PADRAO,
   club:
     "Olá, Nandara! Quero tirar dúvidas e agendar uma avaliação para o Club Slim.",
+};
+
+/** Nome da seção que aparece na mensagem, para a Nandara saber de onde veio o contato. */
+export const SECOES_ORIGEM = {
+  inicio: "Início",
+  sobre: "Sobre",
+  tratamentos: "Tratamentos",
+  club: "Club Slim",
+  depilacao: "Depilação",
+  resultados: "Resultados",
+  espaco: "Espaço",
+  faq: "Dúvidas",
+  contato: "Contato",
+  header: "Cabeçalho",
+  footer: "Rodapé",
 };

@@ -2,15 +2,14 @@
   "name": "Estética Nandara Franco",
   "short_name": "Nandara Franco",
   "description": "Clínica de estética facial e corporal no centro de Xerém, Duque de Caxias - RJ.",
+  "lang": "pt-BR",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F7F8F6",
   "theme_color": "#007C78",
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

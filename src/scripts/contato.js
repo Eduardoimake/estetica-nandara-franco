@@ -1,7 +1,6 @@
 /**
- * Utilitários de contato, WhatsApp e acesso ao DOM.
- * Benefício: centraliza ações repetidas e mantém os pontos de
- * conversão do site consistentes em todas as seções.
+ * Contato e WhatsApp.
+ * Reúne o que antes estava em contato.js e whatsapp.js.
  */
 
 import {
@@ -9,77 +8,118 @@ import {
   HORARIOS,
   MSG_PADRAO,
   MSGS,
+  SECOES_ORIGEM,
 } from "../data/config.js";
+import { $, $$, reduceMotion } from "./dom.js";
+
+export { $, $$ };
+
+/** Indica se a visitante prefere reduzir animações. */
+export const reduce = reduceMotion;
 
 /**
- * Seleciona o primeiro elemento correspondente ao seletor.
- * Benefício: reduz repetição e facilita a leitura dos módulos.
- * @param {string} seletor Seletor CSS desejado.
- * @param {ParentNode} raiz Elemento base da busca.
- * @returns {Element|null} Elemento encontrado.
+ * Monta o endereço do WhatsApp com a mensagem.
+ * @param {string} [mensagem] Texto da mensagem.
+ * @returns {string} URL pronta.
  */
-export const $ = (seletor, raiz = document) => raiz.querySelector(seletor);
+export function urlWhats(mensagem) {
+  return `https://wa.me/${CONTATO.tel}?text=${encodeURIComponent(
+    mensagem || MSG_PADRAO
+  )}`;
+}
 
 /**
- * Seleciona todos os elementos correspondentes ao seletor.
- * Benefício: permite percorrer listas de elementos com facilidade.
- * @param {string} seletor Seletor CSS desejado.
- * @param {ParentNode} raiz Elemento base da busca.
- * @returns {Element[]} Lista de elementos encontrados.
+ * Descobre de qual parte do site veio o clique.
+ * @param {HTMLElement} elemento Botão ou link clicado.
+ * @returns {string} Nome da seção ou vazio.
  */
-export const $$ = (seletor, raiz = document) => [
-  ...raiz.querySelectorAll(seletor),
-];
+function descobrirOrigem(elemento) {
+  if (elemento.dataset.origem) return elemento.dataset.origem;
+
+  const secao = elemento.closest("section[id]");
+
+  if (secao && SECOES_ORIGEM[secao.id]) return SECOES_ORIGEM[secao.id];
+  if (elemento.closest("header")) return SECOES_ORIGEM.header;
+  if (elemento.closest("footer")) return SECOES_ORIGEM.footer;
+
+  return "";
+}
+
+function comOrigem(mensagem, origem) {
+  return origem ? `${mensagem} [Origem: ${origem}]` : mensagem;
+}
+
+function mensagemDe(elemento) {
+  return (
+    elemento.dataset.msg || MSGS[elemento.dataset.whats] || MSG_PADRAO
+  );
+}
 
 /**
- * Indica se a visitante prefere reduzir animações.
- * Benefício: respeita a acessibilidade e a preferência do sistema.
- * @type {boolean}
+ * Registra o clique para analítica (se houver) e para eventos do site.
+ * @param {string} origem Seção de origem.
  */
-export const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function registrarClique(origem) {
+  window.dispatchEvent(
+    new CustomEvent("whatsapp:clique", { detail: { origem } })
+  );
+
+  if (typeof window.plausible === "function") {
+    window.plausible("WhatsApp", { props: { origem: origem || "n/d" } });
+  }
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "whatsapp_click", { origem: origem || "n/d" });
+  }
+}
 
 /**
- * Abre o WhatsApp com uma mensagem pronta para a Nandara.
- * Benefício: facilita o agendamento e identifica a origem do contato.
- * @param {string} mensagem Texto enviado automaticamente ao WhatsApp.
- * @returns {void}
+ * Abre o WhatsApp com a mensagem pronta.
+ * @param {string} mensagem Texto da mensagem.
+ * @param {string} [origem] Seção de origem.
  */
-export function abrirWhats(mensagem) {
+export function abrirWhats(mensagem, origem = "") {
+  registrarClique(origem);
+
   window.open(
-    "https://wa.me/" +
-      CONTATO.tel +
-      "?text=" +
-      encodeURIComponent(mensagem || MSG_PADRAO),
+    urlWhats(comOrigem(mensagem || MSG_PADRAO, origem)),
     "_blank",
     "noopener"
   );
 }
 
 /**
- * Ativa todos os botões que possuem o atributo data-whats.
- * Benefício: permite que qualquer botão do site abra o WhatsApp
- * com a mensagem correta para a seção clicada.
- * @returns {void}
+ * Ativa os botões e links com data-whats.
+ * Links <a> recebem o href completo (funcionam até com clique direito).
+ * Botões <button> abrem o WhatsApp por JavaScript.
  */
 export function initWhats() {
-  document.addEventListener("click", (evento) => {
-    const botao = evento.target.closest("[data-whats]");
+  $$("a[data-whats]").forEach((link) => {
+    const origem = descobrirOrigem(link);
 
-    if (!botao) return;
+    link.href = urlWhats(comOrigem(mensagemDe(link), origem));
+    link.target = "_blank";
+    link.rel = "noopener";
+  });
+
+  document.addEventListener("click", (evento) => {
+    const alvo = evento.target.closest("[data-whats]");
+
+    if (!alvo) return;
+
+    const origem = descobrirOrigem(alvo);
+
+    if (alvo.tagName === "A") {
+      registrarClique(origem);
+      return;
+    }
 
     evento.preventDefault();
-
-    abrirWhats(
-      botao.dataset.msg || MSGS[botao.dataset.whats] || MSG_PADRAO
-    );
+    abrirWhats(mensagemDe(alvo), origem);
   });
 }
 
-/**
- * Preenche os dados de contato, mapa, Instagram e ano do rodapé.
- * Benefício: mantém as informações da clínica centralizadas na configuração.
- * @returns {void}
- */
+/** Preenche contato, mapa, Instagram e ano do rodapé. */
 export function initContato() {
   const consultaMapa = encodeURIComponent(
     "R. Marcio S. Silva 37 Xerem Duque de Caxias RJ"
@@ -87,6 +127,7 @@ export function initContato() {
 
   $("#ctEnd").textContent = CONTATO.endereco;
   $("#ctTel").textContent = CONTATO.telFmt;
+  $("#ctTel").href = `tel:+${CONTATO.tel}`;
   $("#ctHor").textContent = HORARIOS;
   $("#ctMapa").href =
     "https://www.google.com/maps/search/?api=1&query=" + consultaMapa;
@@ -97,18 +138,7 @@ export function initContato() {
   $("#ano").textContent = new Date().getFullYear();
 }
 
-/* =========================================================
-   FORMULÁRIO DE CONTATO
-   Objetivo: transformar nome, objetivo e dia preferido
-   em uma mensagem pronta para o WhatsApp.
-   ========================================================= */
-
-/**
- * Inicializa o envio do formulário pelo WhatsApp.
- * Benefício: permite que a visitante solicite avaliação sem
- * precisar digitar a mensagem manualmente.
- * @returns {void}
- */
+/** Envia o formulário como mensagem pronta no WhatsApp. */
 export function initFormulario() {
   $("#form").addEventListener("submit", (evento) => {
     evento.preventDefault();
@@ -118,7 +148,8 @@ export function initFormulario() {
     const dia = $("#fDia").value;
 
     abrirWhats(
-      `Olá, Nandara! Meu nome é ${nome}. Tenho interesse em: ${objetivo}. Prefiro atendimento na ${dia.toLowerCase()}. Pode me ajudar com a avaliação?`
+      `Olá, Nandara! Meu nome é ${nome}. Tenho interesse em: ${objetivo}. Prefiro atendimento na ${dia.toLowerCase()}. Pode me ajudar com a avaliação?`,
+      "Contato (formulário)"
     );
   });
 }

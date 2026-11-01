@@ -1,17 +1,28 @@
 /**
  * Ponto de entrada do site.
- * Benefício: centraliza a inicialização dos módulos sem misturar
- * estilos, renderização, interações, efeitos e regras de negócio.
+ * Cada módulo roda isolado: se um falhar, os demais continuam funcionando.
  */
+
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/plus-jakarta-sans/600.css";
+import "@fontsource/plus-jakarta-sans/700.css";
+import "@fontsource/plus-jakarta-sans/800.css";
 
 import "./styles/base.css";
 import "./styles/layout.css";
 import "./styles/components.css";
 import "./styles/animations.css";
 import "./styles/responsive.css";
+import "./styles/acessibilidade.css";
 
-/* Módulos de contato, conteúdo e interações gerais. */
-import { initWhats, initContato, initFormulario } from "./scripts/contato.js";
+import {
+  $$,
+  initWhats,
+  initContato,
+  initFormulario,
+} from "./scripts/contato.js";
 import { renderizarConteudo, aplicarFotos } from "./scripts/render.js";
 import {
   initPreloaderProgresso,
@@ -19,15 +30,11 @@ import {
   initScrollspy,
   initReveal,
 } from "./scripts/interactions.js";
-
-/* Efeitos visuais exclusivos do Hero. */
 import {
   initDigitacao,
   initParticulas,
   initTiltEBrilho,
 } from "./scripts/hero-effects.js";
-
-/* Módulos das seções comerciais e de conteúdo. */
 import { initClub } from "./scripts/club.js";
 import { initComparador } from "./scripts/depilacao.js";
 import {
@@ -38,10 +45,27 @@ import {
 import { initFaq } from "./scripts/faq.js";
 
 /**
- * Carrega o guia somente quando solicitado pela URL.
- * Benefício: mantém os recursos da apresentação separados da experiência normal.
- * @returns {Promise<void>} Conclusão do carregamento opcional do guia.
+ * Executa uma etapa sem derrubar o restante do site.
+ * @param {string} nome Nome da etapa, para diagnóstico.
+ * @param {Function} funcao Função a executar.
+ * @param {Function} [reserva] Ação executada se a etapa falhar.
  */
+function executar(nome, funcao, reserva) {
+  try {
+    funcao();
+  } catch (erro) {
+    console.error(`Falha em "${nome}":`, erro);
+
+    if (reserva) {
+      try {
+        reserva();
+      } catch (erroReserva) {
+        console.error(`Falha na reserva de "${nome}":`, erroReserva);
+      }
+    }
+  }
+}
+
 async function carregarGuia() {
   const parametros = new URLSearchParams(window.location.search);
 
@@ -56,34 +80,31 @@ async function carregarGuia() {
   iniciarGuia();
 }
 
-/**
- * Registra uma eventual falha no carregamento do guia.
- * Benefício: facilita o diagnóstico sem interromper o funcionamento do site.
- * @param {unknown} erro Erro encontrado durante o carregamento.
- */
-function relatarErroGuia(erro) {
+executar("preloader e progresso", initPreloaderProgresso, () => {
+  document.getElementById("preloader")?.classList.add("gone");
+});
+executar("menu", initMenu);
+executar("conteúdo", renderizarConteudo);
+executar("fotos", aplicarFotos);
+executar("contato", initContato);
+executar("whatsapp", initWhats);
+executar("scrollspy", initScrollspy);
+executar("revelação", initReveal, () => {
+  $$(".reveal,.tl-item,.chips").forEach((elemento) =>
+    elemento.classList.add("visible")
+  );
+});
+executar("digitação", initDigitacao);
+executar("partículas", initParticulas);
+executar("tilt", initTiltEBrilho);
+executar("club", initClub);
+executar("comparador", initComparador);
+executar("antes e depois", initAntesDepois);
+executar("carrossel", initCarrossel);
+executar("lightbox", initLightbox);
+executar("faq", initFaq);
+executar("formulário", initFormulario);
+
+carregarGuia().catch((erro) => {
   console.error("Não foi possível carregar o guia de apresentação:", erro);
-}
-
-/* Inicialização dos estilos, conteúdo e interações do site. */
-initWhats();
-initContato();
-renderizarConteudo();
-aplicarFotos();
-initPreloaderProgresso();
-initMenu();
-initScrollspy();
-initReveal();
-initDigitacao();
-initParticulas();
-initTiltEBrilho();
-initClub();
-initComparador();
-initAntesDepois();
-initCarrossel();
-initLightbox();
-initFaq();
-initFormulario();
-
-/* O guia é carregado apenas com ?guia=1 na URL. */
-carregarGuia().catch(relatarErroGuia);
+});

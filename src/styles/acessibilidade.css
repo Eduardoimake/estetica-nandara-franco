@@ -1,0 +1,203 @@
+/* Ajustes de acessibilidade, estados e classes que substituem estilos inline. */
+
+[hidden] {
+  display: none !important;
+}
+
+/* Link "pular para o conteúdo" */
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -80px;
+  z-index: 10000;
+  background: var(--menta);
+  color: var(--teal-escuro);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: top 0.2s;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+main:focus {
+  outline: none;
+}
+
+section {
+  scroll-margin-top: 90px;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Plano B do preloader: some sozinho mesmo se o JavaScript falhar */
+@keyframes preloaderFalha {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+#preloader {
+  animation: preloaderFalha 0.3s ease 4s forwards;
+}
+
+#preloader.gone {
+  pointer-events: none;
+}
+
+#preloader img {
+  display: block;
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-mark-limpo {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Classes que substituem estilos inline */
+.sec-white {
+  background: #fff;
+}
+
+.eyebrow-menta {
+  background: rgba(98, 230, 200, 0.2);
+  color: var(--menta);
+}
+
+.mt-14 { margin-top: 14px; }
+.mt-18 { margin-top: 18px; }
+.mt-28 { margin-top: 28px; }
+.mt-30 { margin-top: 30px; }
+
+.nota-esq {
+  text-align: left;
+  margin-top: 6px;
+}
+
+.sub-ct {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.btn-centro {
+  justify-content: center;
+}
+
+.x-claro {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Títulos com hierarquia correta (h3 no lugar de h4) */
+.step h3 {
+  font-size: 1.02rem;
+  margin-bottom: 4px;
+}
+
+.ct-card h3 {
+  color: var(--menta);
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.ft h3 {
+  color: var(--menta);
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Foco visível em controles invisíveis */
+.ba:focus-within {
+  outline: 3px solid var(--menta);
+  outline-offset: 4px;
+}
+
+.carousel:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Selo com contraste adequado (branco sobre #b02a5c, cerca de 6:1) */
+.selo {
+  background: #b02a5c;
+}
+
+/* Novos elementos */
+.club-info {
+  list-style: none;
+  text-align: left;
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.club-info li {
+  padding: 4px 0 4px 20px;
+  position: relative;
+}
+
+.club-info li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--menta);
+}
+
+.dep-nota {
+  margin: -40px auto 40px;
+  max-width: 640px;
+  font-weight: 600;
+  color: var(--teal-escuro);
+}
+
+.pkg .total {
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.85;
+  margin: -12px 0 18px;
+}
+
+.link-priv {
+  text-decoration: underline;
+}
+
+.noscript {
+  position: relative;
+  z-index: 1;
+  padding: 110px 20px 20px;
+  background: var(--branco-suave);
+  color: var(--grafite);
+  text-align: center;
+}
+
+.noscript a {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Desempenho em celulares: sem partículas e sem esferas animadas */
+@media (max-width: 767px) {
+  #particles {
+    display: none;
+  }
+
+  .orb {
+    animation: none;
+    filter: blur(40px);
+  }
+}

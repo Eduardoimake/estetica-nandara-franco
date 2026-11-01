@@ -1,13 +1,9 @@
 /*
  * Conteúdo dinâmico do site.
- * Benefício: centraliza ícones, tratamentos, procedimentos, FAQ,
- * dias, turnos, palavras do Hero, rótulos da galeria e marquee.
  */
 
-/* =========================================================
-   ÍCONES DOS TRATAMENTOS
-   Objetivo: fornecer os caminhos SVG usados nos cartões.
-   ========================================================= */
+import { HORARIOS } from "./config.js";
+
 export const ICONS = {
   gota:
     '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11z"/>',
@@ -27,11 +23,7 @@ export const ICONS = {
     '<path d="M12 20s-7-4.500-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.500-7 10-7 10z"/>',
 };
 
-/* =========================================================
-   TRATAMENTOS
-   Objetivo: definir os serviços exibidos na seção Tratamentos.
-   Campos: n = nome, d = descrição, i = ícone, dest = destaque.
-   ========================================================= */
+/** Campos: n = nome, d = descrição, i = ícone, dest = destaque. */
 export const TRAT = [
   {
     n: "Redução de gordura localizada",
@@ -77,11 +69,6 @@ export const TRAT = [
   },
 ];
 
-/**
- * Procedimentos disponíveis no Club Slim.
- * Benefício: apresenta as opções sem prometer resultado específico.
- * @type {string[]}
- */
 export const PROCS = [
   "Hidrolipo",
   "DrenoDetox",
@@ -95,12 +82,6 @@ export const PROCS = [
   "Pump Up Glúteos",
 ];
 
-/**
- * Tipos de tratamento disponíveis para referência interna.
- * Benefício: mantém a lista organizada para futuras integrações
- * ou filtros, sem alterar o site atual.
- * @type {string[]}
- */
 export const TIPOS = [
   "Gordura localizada",
   "Flacidez",
@@ -112,13 +93,18 @@ export const TIPOS = [
   "Drenagem estética",
 ];
 
-/* =========================================================
-   PERGUNTAS FREQUENTES
-   Objetivo: responder dúvidas comuns e reduzir fricção
-   no agendamento.
-   ========================================================= */
-
-import { HORARIOS } from "./config.js";
+/** Opções do campo "Seu objetivo" do formulário (alinhadas aos tratamentos). */
+export const OBJETIVOS = [
+  "Gordura localizada",
+  "Flacidez",
+  "Club Slim",
+  "Limpeza de pele",
+  "Rejuvenescimento",
+  "Tratamento para diástase",
+  "Drenagem estética",
+  "Depilação",
+  "Outro",
+];
 
 export const FAQ = [
   [
@@ -147,10 +133,6 @@ export const FAQ = [
   ],
 ];
 
-/* =========================================================
-   PLANEJADOR DO CLUB SLIM
-   Objetivo: permitir que a visitante escolha dia e turno.
-   ========================================================= */
 export const DIAS = [
   "Segunda",
   "Terça",
@@ -162,11 +144,6 @@ export const DIAS = [
 
 export const TURNOS = ["Manhã", "Tarde"];
 
-/* =========================================================
-   HERO
-   Objetivo: alternar os diferenciais principais no efeito
-   de digitação.
-   ========================================================= */
 export const PALAVRAS = [
   "Gordura localizada",
   "Flacidez",
@@ -175,20 +152,13 @@ export const PALAVRAS = [
   "Depilação",
 ];
 
-/* =========================================================
-   GALERIA DO ESPAÇO
-   Objetivo: definir os rótulos provisórios do mosaico.
-   ========================================================= */
+/** Rótulos do mosaico (usados também como texto alternativo das fotos). */
 export const MOS_LABELS = [
   "Recepção",
   "Corredor",
-  "Sala de atendimento"
+  "Sala de atendimento",
 ];
 
-/* =========================================================
-   MARQUEE
-   Objetivo: reforçar serviços e diferenciais em movimento.
-   ========================================================= */
 export const MARQUEE_ITENS = [
   "Estética facial",
   "Estética corporal",
